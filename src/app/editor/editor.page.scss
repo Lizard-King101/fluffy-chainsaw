@@ -1,0 +1,47 @@
+:host {
+    .container-fluid {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        padding: 0;
+
+        .header {
+            flex: 0 0 0px;
+        }
+        .editor-body {
+            flex: 1 0 0px;
+            display: flex;
+            flex-direction: row;
+
+            .tool-bar {
+                flex: 0 0 0px;
+                border-right: 2px solid #8e8e8e;
+
+                .tool {
+                    padding: 10px 0px;
+                    width: 45px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    
+                    font-size: 1.2rem;
+
+                    &.selected {
+                        background-color: #cecece;
+                    }
+                }
+            }
+            .view-port {
+                flex: 1 0 0px;
+                position: relative;
+                background-color: #cecece;
+                overflow: hidden;
+
+                svg {
+                    position: absolute;
+                    background-color: #e6e6e6;
+                }
+            }
+        }
+    }
+}

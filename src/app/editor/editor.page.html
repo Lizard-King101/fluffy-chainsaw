@@ -1,0 +1,17 @@
+<div class="container-fluid">
+    <div class="header">
+        <button class="btn btn-primary" (click)="newSVG()">New</button>
+    </div>
+    <div class="editor-body">
+        <div class="tool-bar">
+            <div class="tool" *ngFor="let tool of editor.tools" (click)="tool.select()" [ngClass]="{'selected': tool.selected}">
+                <fa-icon *ngIf="tool.icon" [icon]="tool.icon"></fa-icon>
+            </div>
+        </div>
+        <div #viewPort class="view-port">
+            <svg #canvas *ngIf="svg" [ngStyle]="canvasStyle" [attr.width]="svg.width" [attr.height]="svg.height" [attr.viewBox]="('0 0 '+ svg.width + ' ' + svg.height)">
+
+            </svg>
+        </div>
+    </div>
+</div>
