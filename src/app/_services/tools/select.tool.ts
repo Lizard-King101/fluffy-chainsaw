@@ -9,6 +9,8 @@ export class SelectTool extends Tool {
     }
 
     click(svg: SVG, event: MouseEvent) {
-
+        console.log('SELECT TOOL');
+        console.log(svg, event);
+        
     }
 }
