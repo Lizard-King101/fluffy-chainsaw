@@ -3,6 +3,7 @@ import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { RouterModule, Routes } from "@angular/router";
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
+import { Components } from "../_components/components.module";
 import { EditorPage } from "./editor.page";
 
 const Routes: Routes = [
@@ -19,6 +20,7 @@ const Routes: Routes = [
         CommonModule,
         FormsModule,
         FontAwesomeModule,
+        Components,
         RouterModule.forChild(Routes)
     ]
 })

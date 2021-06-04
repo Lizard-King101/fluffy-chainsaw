@@ -8,9 +8,8 @@ export class SelectTool extends Tool {
         super(editor);
     }
 
-    click(svg: SVG, event: MouseEvent) {
+    click(event: MouseEvent) {
         console.log('SELECT TOOL');
-        console.log(svg, event);
         
     }
 }

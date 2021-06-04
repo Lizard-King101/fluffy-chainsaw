@@ -1,17 +1,30 @@
 <div class="container-fluid">
     <div class="header">
-        <button class="btn btn-primary" (click)="newSVG()">New</button>
+        <div class="function-bar">
+            <button (click)="newSVG()">New</button>
+        </div>
+        <div class="tabs">
+            <div class="svg-tab" *ngFor="let svg of editor.svgs" [ngClass]="{'selected': editor.selectedSVG == svg}" (click)="editor.selectSVG(svg.id)">
+                <label>{{ svg.name }}</label>
+                <button (click)="editor.closeSVG(svg.id)"><fa-icon icon="times"></fa-icon></button>
+            </div>
+        </div>
     </div>
     <div class="editor-body">
         <div class="tool-bar">
-            <div class="tool" *ngFor="let tool of editor.tools" (click)="tool.select()" [ngClass]="{'selected': tool.selected}">
-                <fa-icon *ngIf="tool.icon" [icon]="tool.icon"></fa-icon>
+            <div class="tool" *ngFor="let tool of editor.tools" (click)="tool.select($event)" (contextmenu)="tool.select($event)" [ngClass]="{'selected': tool.selected, 'children': tool.children.length}">
+                <fa-icon *ngIf="tool.icon" [icon]="tool.getIcon"></fa-icon>
+                <ng-container *ngIf="tool.showChildren">
+                    <div class="child-tools">
+                        <div class="tool" *ngFor="let ctool of tool.children" (click)="ctool.select($event)" (contextmenu)="ctool.select($event)" [ngClass]="{'selected': ctool.selected}">
+                            <fa-icon *ngIf="ctool.icon" [icon]="ctool.icon"></fa-icon>
+                        </div>
+                    </div>
+                </ng-container>
             </div>
         </div>
         <div #viewPort class="view-port">
-            <svg #canvas *ngIf="svg" [ngStyle]="canvasStyle" [attr.width]="svg.width" [attr.height]="svg.height" [attr.viewBox]="('0 0 '+ svg.width + ' ' + svg.height)">
-
-            </svg>
+            <svg #canvas display *ngIf="editor.selectedSVG"></svg>
         </div>
     </div>
 </div>

@@ -36,15 +36,11 @@ export class EditorPage implements AfterViewInit{
                 x: event.x - viewport.offsetLeft,
                 y: event.y - viewport.offsetTop
             }
-            console.log(event, start);
             switch(event.button) {
                 case 0:
                     console.log('Left Mouse Button');
-                    if(this.editor.selectedTool && this.svg) {
-                        this.editor.selectedTool.click(this.svg, event);
-                    } else {
-                        console.log('Missing SVG or Tool', this.svg, this.editor.selectedTool);
-                        
+                    if(this.editor.selectedTool) {
+                        this.editor.selectedTool.down(event);
                     }
                     break;
                 case 1:
@@ -61,33 +57,31 @@ export class EditorPage implements AfterViewInit{
                     break;
             }
         });
-
-        viewport.addEventListener('wheel', (event: WheelEvent) => {
-            // console.log(event);
-            let scale = Math.abs(this.scale + 2)
-
-            if(event.deltaY > 0) {
-                console.log('Scroll Down');
-                this.scale -= 1/(Math.pow(scale, 2));
-            } else {
-                console.log('Scroll Up');
-                this.scale += 1/(Math.pow(scale, 2));
-            }
-            this.updateCanvasStyle();
-        })
-
-        viewport.addEventListener('contextmenu', (event: MouseEvent) => {
-            // event.preventDefault();
-            // return false;
-        })
-
+        
         viewport.addEventListener('mouseup', (event: MouseEvent) => {
+            if(this.editor.selectedTool) this.editor.selectedTool.up(event); 
             this.movingView = false;
         });
 
+        viewport.addEventListener('wheel', (event: WheelEvent) => {
+            if(this.editor.selectedSVG != undefined) {
+                let scale = Math.abs(this.editor.selectedSVG.zoom + 2);
+                if(event.deltaY > 0) {
+                    this.editor.selectedSVG.zoom -= 1/(Math.pow(scale, 2));
+                } else {
+                    this.editor.selectedSVG.zoom += 1/(Math.pow(scale, 2));
+                }
+            }
+        })
+
+        viewport.addEventListener('contextmenu', (event: MouseEvent) => {
+            event.preventDefault();
+            if(this.editor.selectedTool) this.editor.selectedTool.contextMenu(event); 
+            return false;
+        })
+
         viewport.addEventListener('mousemove', (event: MouseEvent) => {
-            if(this.movingView) {
-                // console.log(event);
+            if(this.movingView && this.editor.selectedSVG != undefined) {
                 let pos: Point = {
                     x: event.x - viewport.offsetLeft,
                     y: event.y - viewport.offsetTop
@@ -100,42 +94,41 @@ export class EditorPage implements AfterViewInit{
                     x: this.moveStart.x + delta.x,
                     y: this.moveStart.y + delta.y
                 }
-                this.canvasPos = {
-                    x: this.canvasPos.x + delta.x,
-                    y: this.canvasPos.y + delta.y
+                this.editor.selectedSVG.pos = {
+                    x: this.editor.selectedSVG.pos.x + delta.x,
+                    y: this.editor.selectedSVG.pos.y + delta.y
                 }
-                this.updateCanvasStyle()
             }
+            if(this.editor.selectedTool) this.editor.selectedTool.drag(event); 
         });
+
+        viewport.addEventListener('click', (event: MouseEvent) => {
+            if(this.editor.selectedTool && event.button == 0) this.editor.selectedTool.click(event); 
+        })
+
+        this.editor.setViewPort(viewport);
     }
 
     newSVG() {
-        let width = 300;
-        let height = 250;
+        // let width = 300;
+        // let height = 250;
 
-        let viewport = <HTMLElement>this.viewPort?.nativeElement;
-        console.log(viewport);
+        // let viewport = <HTMLElement>this.viewPort?.nativeElement;
 
-        this.canvasPos = {
-            x: (viewport.clientWidth / 2) - (width / 2),
-            y: (viewport.clientHeight / 2) - (height / 2)
-        }
-        console.log(this.canvasPos);
+        // this.canvasPos = {
+        //     x: (viewport.clientWidth / 2) - (width / 2),
+        //     y: (viewport.clientHeight / 2) - (height / 2)
+        // }
         
+        // this.svg = {
+        //     id: 'test',
+        //     elements: [],
+        //     tempElements: [],
+        //     width,
+        //     height
+        // }
 
-        this.svg = {
-            id: 'test',
-            elements: [],
-            width,
-            height
-        }
-
-        this.updateCanvasStyle();
+        this.editor.newSVG(300, 250);
     }
 
-    updateCanvasStyle() {
-        this.canvasStyle.left = this.canvasPos.x + 'px';
-        this.canvasStyle.top = this.canvasPos.y + 'px';
-        this.canvasStyle.scale = this.scale;
-    }
 }

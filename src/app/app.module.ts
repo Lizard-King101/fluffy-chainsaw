@@ -9,6 +9,7 @@ import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontaweso
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
 import { EditorService } from './_services/editor.service';
+import { Components } from './_components/components.module';
 
 @NgModule({
     declarations: [
@@ -18,7 +19,8 @@ import { EditorService } from './_services/editor.service';
         BrowserModule,
         AppRoutingModule,
         NgbModule,
-        FontAwesomeModule
+        FontAwesomeModule,
+        Components
     ],
     providers: [
         EditorService
