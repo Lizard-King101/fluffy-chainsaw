@@ -1,4 +1,8 @@
 import { Injectable } from "@angular/core";
+import { Group } from "../editor/objects/group.object";
+import { Path } from "../editor/objects/path.object";
+import { Shape } from "../editor/objects/shape.object";
+import { SVG } from "../editor/objects/svg.object";
 import { Tool } from "./tools/tool";
 
 import { Tools } from "./tools/tools";
@@ -34,19 +38,14 @@ export class EditorService {
     newSVG(width: number, height: number) {
         if(this.viewPort != undefined) {
             let id = this.ID;
-            let svg: SVG = {
-                id: id + '',
-                name: 'new_svg_' + id,
-                elements: [],
-                tempElements: [],
+            let svg = new SVG(this, {
                 width,
                 height,
-                zoom: 1,
                 pos: {
                     x: (this.viewPort.clientWidth / 2) - (width / 2),
                     y: (this.viewPort.clientHeight / 2) - (height / 2)
                 }
-            }
+            })
 
             this.svgs.push(svg);
             this.selectedSVG = svg;
@@ -114,43 +113,6 @@ export class EditorService {
     get ID() {
         return Math.random().toString(36).substr(2, 9);
     }
-}
-
-export interface SVG {
-    id: string;
-    name?: string;
-    elements: (Path | Shape | Group)[];
-    tempElements: (Path | Shape)[];
-    width: number;
-    height: number;
-    zoom: number;
-    pos: Point;
-}
-
-export interface Group {
-    id: string;
-    elements: (Path | Shape | Group)[]
-}
-
-export interface Path {
-    id: string;
-    lines: Line[];
-}
-
-export interface Line {
-    id: string;
-    type: 'line' | 'bezier';
-    points: Point[];
-}
-
-
-export interface Shape {
-    position: Point;
-    type: 'circle' | 'square';
-    width?: number;
-    height?: number;
-    radius?: number;
-    fill?: Color;
 }
 
 export interface Point {

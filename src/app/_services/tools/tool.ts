@@ -1,5 +1,5 @@
 import { IconName } from "@fortawesome/fontawesome-svg-core";
-import { EditorService, SVG } from "../editor.service";
+import { EditorService } from "../editor.service";
 
 export class Tool {
     icon: IconName = "question-circle";

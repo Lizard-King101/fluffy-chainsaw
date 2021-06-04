@@ -1,5 +1,7 @@
 import { IconName } from "@fortawesome/fontawesome-svg-core";
-import { EditorService, Line, Path, SVG } from "../editor.service";
+import { Line } from "src/app/editor/objects/line.object";
+import { Path } from "src/app/editor/objects/path.object";
+import { EditorService } from "../editor.service";
 import { Tool } from "./tool";
 
 export class PenTool extends Tool{
@@ -22,16 +24,9 @@ export class PenTool extends Tool{
             })
 
             if(this._editor.editingElement == undefined) {
-                let path: Path = {
-                    id: this._editor.ID,
-                    lines: []
-                }
+                let path = new Path(this._editor);
         
-                let line: Line = {
-                    id: this._editor.ID,
-                    type: 'line',
-                    points: []
-                }
+                let line = new Line(this._editor);
         
                 
                 line.points.push(point);
@@ -42,11 +37,7 @@ export class PenTool extends Tool{
             } else {
                 if(this.workingLine && this._editor.editingElement.hasOwnProperty('lines')) {
                     this.workingLine.points.push(point);
-                    let line: Line = {
-                        id: this._editor.ID,
-                        type: 'line',
-                        points: [point]
-                    }
+                    let line = new Line(this._editor, {points: [point]})
                     this.workingLine = line;
                     (<Path>this._editor.editingElement).lines.push(line);
                 }

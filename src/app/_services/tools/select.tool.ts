@@ -1,5 +1,5 @@
 import { IconName } from "@fortawesome/fontawesome-common-types";
-import { EditorService, SVG } from "../editor.service";
+import { EditorService } from "../editor.service";
 import { Tool } from "./tool";
 
 export class SelectTool extends Tool {

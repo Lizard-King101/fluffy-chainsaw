@@ -1,12 +1,11 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from "@angular/core";
-import { EditorService, Point, SVG } from "../_services/editor.service";
+import { EditorService, Point } from "../_services/editor.service";
 
 @Component({
     templateUrl: 'editor.page.html',
     styleUrls: ['editor.page.scss']
 })
 export class EditorPage implements AfterViewInit{
-    svg: SVG | null = null;
     scale: number = 1;
 
     canvasPos: Point = {x: 0, y: 0};
