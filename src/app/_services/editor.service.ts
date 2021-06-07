@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Group } from "../editor/objects/group.object";
 import { Path } from "../editor/objects/path.object";
+import { Point } from "../editor/objects/point.object";
 import { Shape } from "../editor/objects/shape.object";
 import { SVG } from "../editor/objects/svg.object";
 import { Tool } from "./tools/tool";
@@ -18,6 +19,12 @@ export class EditorService {
     editingElement?: Path | Shape | Group;
 
     private viewPort?: HTMLElement;
+
+    settings: any = {
+        snapDistance: 5
+    }
+
+    keysPressed: KeysPressed = {};
 
     constructor() {
         Tools.forEach((tool) => {
@@ -41,10 +48,7 @@ export class EditorService {
             let svg = new SVG(this, {
                 width,
                 height,
-                pos: {
-                    x: (this.viewPort.clientWidth / 2) - (width / 2),
-                    y: (this.viewPort.clientHeight / 2) - (height / 2)
-                }
+                pos: new Point((this.viewPort.clientWidth / 2) - (width / 2), (this.viewPort.clientHeight / 2) - (height / 2))
             })
 
             this.svgs.push(svg);
@@ -62,6 +66,9 @@ export class EditorService {
                 continue;
             }
         }
+        this.tools.forEach((t) => {
+            t.reset();
+        })
     }
 
     closeSVG(id: string) {
@@ -93,21 +100,98 @@ export class EditorService {
         this.viewPort = viewPortElement;
     }
 
-    toCanvasPoint(point: Point) : Point {
+    toCanvasPoint(x: number, y: number): Point;
+    toCanvasPoint(point: Point): Point;
+    toCanvasPoint(xOrPoint: Point|number, y?: number): Point {
+        let point: Point;
+        if(y != null) {
+            let x = xOrPoint;
+            if(typeof x == 'number' && typeof y == 'number') {
+                point = new Point(x,y);
+            } else {
+                throw new Error('Mis match of x y types');
+            }
+        } else {
+            if(xOrPoint instanceof Point) {
+                point = xOrPoint;
+            } else {
+                throw new Error('Mis match type or missing argument');
+            }
+        }
         if(this.viewPort && this.selectedSVG) {
             let canvas: HTMLElement = <HTMLElement>this.viewPort.firstChild
             let rect = canvas.getBoundingClientRect();
-            let p:Point = {
-                x: +((point.x - rect.left) / this.selectedSVG.zoom).toFixed(2) ,
-                y: +((point.y - rect.top) / this.selectedSVG.zoom).toFixed(2) 
-            }
+            let p = new Point(
+                +((point.x - rect.left) / this.selectedSVG.zoom).toFixed(2),
+                +((point.y - rect.top)  / this.selectedSVG.zoom).toFixed(2)
+            );
             return p;
         }
-        return {
-            x: 0,
-            y: 0
-        };
-        
+        return point;
+    }
+
+    toViewportPoint(x: number, y: number): Point;
+    toViewportPoint(point: Point): Point;
+    toViewportPoint(xOrPoint: Point|number, y?: number): Point {
+        let point: Point;
+        if(y != null) {
+            let x = xOrPoint;
+            if(typeof x == 'number' && typeof y == 'number') {
+                point = new Point(x,y);
+            } else {
+                throw new Error('Mis match of x y types');
+            }
+        } else {
+            if(xOrPoint instanceof Point) {
+                point = xOrPoint;
+            } else {
+                throw new Error('Mis match type or missing argument');
+            }
+        }
+        if(this.viewPort) {
+            return point.subtract(this.viewPort.offsetLeft, this.viewPort.offsetTop);
+        } else return point;
+    }
+
+    elementIsPath(element: any): boolean {
+        return element instanceof Path
+    }
+
+    toolType() {
+
+    }
+
+    findElement(id: string): Path | Shape | Group | false {
+        if(this.selectedSVG) {
+            for(let element of this.selectedSVG.elements) {
+                if(element.id == id) {
+                    return element;
+                }
+            }
+            for(let element of this.selectedSVG.tempElements) {
+                if(element.id == id) {
+                    return element;
+                }
+            }
+            return false;
+        } else {
+            return false;
+        }
+    }
+
+    removeElement(id: string) {
+        if(this.selectedSVG) {
+            for(let i = 0; i < this.selectedSVG.elements.length; i++) {
+                if(this.selectedSVG.elements[i].id == id) {
+                    this.selectedSVG.elements.splice(i, 1);
+                }
+            }
+            for(let i = 0; i < this.selectedSVG.tempElements.length; i++) {
+                if(this.selectedSVG.tempElements[i].id == id) {
+                    this.selectedSVG.tempElements.splice(i, 1);
+                }
+            }
+        }
     }
 
     get ID() {
@@ -115,13 +199,21 @@ export class EditorService {
     }
 }
 
-export interface Point {
-    x: number;
-    y: number;
+export interface ElementAttribute {
+    label: string;
+    name: string;
+    input: 'range' | 'number' | 'text' | 'color';
+    output: string;
+    min?: number;
+    max?: number;
 }
 
 export interface Color {
     r: number;
     g: number;
     b: number;
+}
+
+interface KeysPressed {
+    [key:string]: string;
 }

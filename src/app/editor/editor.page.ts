@@ -1,5 +1,6 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from "@angular/core";
-import { EditorService, Point } from "../_services/editor.service";
+import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from "@angular/core";
+import { EditorService } from "../_services/editor.service";
+import { Point } from "./objects/point.object";
 
 @Component({
     templateUrl: 'editor.page.html',
@@ -8,33 +9,28 @@ import { EditorService, Point } from "../_services/editor.service";
 export class EditorPage implements AfterViewInit{
     scale: number = 1;
 
-    canvasPos: Point = {x: 0, y: 0};
-    canvasStyle = {
-        left: '0px',
-        top: '0px',
-        scale: 1
-    }
-
     movingView: boolean = false;
-    moveStart: Point = {
-        x: 0,
-        y: 0
-    };
+    moveStart: Point;
 
     @ViewChild('canvas') canvas?: ElementRef<SVGElement>;
     @ViewChild('viewPort') viewPort?: ElementRef<HTMLElement>;
 
-    constructor(public editor: EditorService) {
+    
+    @HostListener('document:keydown', ['$event']) handleKeyDown(event: KeyboardEvent) {
+        console.log(event.key);
+    }
+    @HostListener('document:keyup', ['$event']) handleKeyUp(event: KeyboardEvent) {
+        console.log();
+    }
 
+    constructor(public editor: EditorService) {
+        this.moveStart = new Point(0,0);
     }
 
     ngAfterViewInit() {
         let viewport = <HTMLElement>this.viewPort?.nativeElement;
         viewport.addEventListener('mousedown', (event: MouseEvent) => {
-            let start: Point = {
-                x: event.x - viewport.offsetLeft,
-                y: event.y - viewport.offsetTop
-            }
+            let start = this.editor.toViewportPoint(event.x, event.y);
             switch(event.button) {
                 case 0:
                     console.log('Left Mouse Button');
@@ -81,22 +77,11 @@ export class EditorPage implements AfterViewInit{
 
         viewport.addEventListener('mousemove', (event: MouseEvent) => {
             if(this.movingView && this.editor.selectedSVG != undefined) {
-                let pos: Point = {
-                    x: event.x - viewport.offsetLeft,
-                    y: event.y - viewport.offsetTop
-                }
-                let delta: Point = {
-                    x: pos.x - this.moveStart.x,
-                    y: pos.y - this.moveStart.y
-                }
-                this.moveStart = {
-                    x: this.moveStart.x + delta.x,
-                    y: this.moveStart.y + delta.y
-                }
-                this.editor.selectedSVG.pos = {
-                    x: this.editor.selectedSVG.pos.x + delta.x,
-                    y: this.editor.selectedSVG.pos.y + delta.y
-                }
+                let pos = this.editor.toViewportPoint(event.x, event.y);
+                //new Point( event.x - viewport.offsetLeft, event.y - viewport.offsetTop);
+                let delta = pos.subtract(this.moveStart);
+                this.moveStart.addTo(delta.x, delta.y);
+                this.editor.selectedSVG.pos.addTo(delta);
             }
             if(this.editor.selectedTool) this.editor.selectedTool.drag(event); 
         });
@@ -109,23 +94,6 @@ export class EditorPage implements AfterViewInit{
     }
 
     newSVG() {
-        // let width = 300;
-        // let height = 250;
-
-        // let viewport = <HTMLElement>this.viewPort?.nativeElement;
-
-        // this.canvasPos = {
-        //     x: (viewport.clientWidth / 2) - (width / 2),
-        //     y: (viewport.clientHeight / 2) - (height / 2)
-        // }
-        
-        // this.svg = {
-        //     id: 'test',
-        //     elements: [],
-        //     tempElements: [],
-        //     width,
-        //     height
-        // }
 
         this.editor.newSVG(300, 250);
     }

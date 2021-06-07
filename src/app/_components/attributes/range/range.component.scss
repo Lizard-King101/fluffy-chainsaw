@@ -1,0 +1,21 @@
+:host {
+    label {
+        font-size: 1rem;
+    }
+
+    .inputs {
+        display: flex;
+        padding: 5px;
+
+        input.number {
+            width: 50px;
+            margin-right: 5px;
+            padding: 3px 4px;
+        }
+
+        input.range {
+            flex: 1 0 0px;
+            min-width: unset;
+        }
+    }
+}

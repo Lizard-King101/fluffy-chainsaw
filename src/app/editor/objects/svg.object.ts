@@ -1,6 +1,7 @@
-import { EditorService, Point } from "src/app/_services/editor.service";
+import { EditorService } from "src/app/_services/editor.service";
 import { Group } from "./group.object";
 import { Path } from "./path.object";
+import { Point } from "./point.object";
 import { Shape } from "./shape.object";
 
 export class SVG {
@@ -15,6 +16,7 @@ export class SVG {
 
     constructor(private editor: EditorService, options: SVGOptions) {
         this.id = this.editor.ID;
+        this.name = 'new_svg_'+this.id;
         this.width = options.width;
         this.height = options.height;
         this.pos = options.pos;

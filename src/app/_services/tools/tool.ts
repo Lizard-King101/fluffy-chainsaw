@@ -62,4 +62,6 @@ export class Tool {
     drag(event: MouseEvent) {}
 
     contextMenu(event: MouseEvent) {}
+
+    reset(): void {}
 }

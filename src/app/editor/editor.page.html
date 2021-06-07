@@ -26,5 +26,12 @@
         <div #viewPort class="view-port">
             <svg #canvas display *ngIf="editor.selectedSVG"></svg>
         </div>
+        <div class="attribute-panel">
+            <ng-container *ngIf="editor.editingElement">
+                <ng-container *ngFor="let attr of editor.editingElement?.attributes">
+                    <range *ngIf="attr.input == 'range'" [(ngModel)]="editor.editingElement.settings[attr.output]" [min]="attr.min" [max]="attr.max" [label]="attr.label"></range>
+                </ng-container>
+            </ng-container>
+        </div>
     </div>
 </div>

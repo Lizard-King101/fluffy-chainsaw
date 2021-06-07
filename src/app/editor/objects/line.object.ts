@@ -1,4 +1,5 @@
-import { EditorService, Point } from "src/app/_services/editor.service";
+import { EditorService } from "src/app/_services/editor.service";
+import { Point } from "./point.object";
 
 export class Line {
     id: string;

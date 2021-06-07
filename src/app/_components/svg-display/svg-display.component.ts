@@ -14,8 +14,7 @@ export class SVGDisplay implements AfterViewInit{
     @HostBinding('style.scale') get zoom() { return this.editor.selectedSVG?.zoom }
 
 
-    constructor(private editor: EditorService, private host:ElementRef<SVGElement>) {
-
+    constructor(public editor: EditorService, private host:ElementRef<SVGElement>) {
     }
 
     ngAfterViewInit() {

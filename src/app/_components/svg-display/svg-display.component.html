@@ -1,5 +1,11 @@
-<ng-container *ngFor="let element of this.editor.selectedSVG.elements">
-    <ng-container *ngIf="element.path">
-        
+<ng-container *ngFor="let element of editor.selectedSVG?.tempElements">
+    <ng-container *ngIf="editor.elementIsPath(element)">
+        <svg:path [id]="element.id" [attr.d]="element.raw" stroke="#aeaeae" stroke-width="2" fill="transparent"/>
+    </ng-container>
+</ng-container>
+
+<ng-container *ngFor="let element of editor.selectedSVG?.elements">
+    <ng-container *ngIf="editor.elementIsPath(element)">
+        <svg:path [id]="element.id" [attr.d]="element.raw" stroke="black" [attr.stroke-width]="element.settings.stroke" fill="transparent"/>
     </ng-container>
 </ng-container>
