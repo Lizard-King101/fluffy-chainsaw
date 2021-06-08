@@ -1,0 +1,38 @@
+:host {
+    label {
+        font-size: 1rem;
+        padding: 4px 15px;
+        margin: 0;
+    }
+
+    .inputs {
+        display: flex;
+        flex-direction: column;
+        padding: 5px;
+
+        .hex-selector {
+            display: flex;
+            flex-direction: row;
+            margin-bottom: 6px;
+
+            span {
+                display: block;
+                margin-right: 5px;
+                height: 35px;
+                flex: 0 0 60px;
+                border-radius: 3px;
+                border: 1px solid #cecece;
+            }
+
+            input {
+                flex: 5 0 0px;
+                min-width: 0;
+                margin-right: 5px;
+            }
+
+            select {
+                flex: 2 0 0px;
+            }
+        }
+    }
+}

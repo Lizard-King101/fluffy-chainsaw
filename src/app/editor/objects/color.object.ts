@@ -1,21 +1,44 @@
 export class Color {
-    rgb: RGB;
+    _hex: string = '#ff0000';
+    _rgb: RGB = {r: 255, g: 0, b: 0};
+    _hsl: HSL = {h: 0, s: 1, l: .5};
+
 
     get hex(): string {
-        return this.rgbToHex(this.rgb);
+        return this._hex;
+    }
+    set hex(hex: string) {
+        this._hex = hex;
+        this._rgb = this.hexToRgb(this._hex);
+        this._hsl = this.rgbToHsl(this._rgb);
+    }
+
+    get rgb(): RGB {
+        return this._rgb;
+    }
+    set rgb(rgb: RGB) {
+        this._rgb = rgb;
+        this._hex = this.rgbToHex(this._rgb);
+        this._hsl = this.rgbToHsl(this.rgb);
+    }
+
+
+    get hsl(): HSL {
+        return this._hsl;
+    }
+    set hsl(hsl: HSL) {
+        this._hsl = hsl;
+        this._rgb = this.hslToRgb(this._hsl);
+        this._hex = this.rgbToHex(this._rgb);
     }
 
     constructor(hex?: string) {
         if(hex && this.isColor(hex)) {
-            let rgb = this.hexToRgb(hex);
-            if(rgb) {
-                this.rgb = rgb;
-            } else {
-                this.rgb = {r: 0, g: 0, b: 0};
-            }
+            this.rgb = this.hexToRgb(hex);
         } else {
-            this.rgb = {r: 0, g: 0, b: 0};
-        } 
+            this.rgb = {r: 255, g: 0, b: 0};
+        }
+
     }
 
     isColor(color: any): boolean {
@@ -27,31 +50,32 @@ export class Color {
 
     hslToRgb(hsl: HSL): RGB {
         let { h, s, l } = hsl;
+        h /= 360; s /= 100; l /= 100;
         var r, g, b;
-    
-        if(s == 0){
+
+        if (s == 0) {
             r = g = b = l; // achromatic
-        }else{
-            var hue2rgb = (p: number, q: number, t: number) => {
-                if(t < 0) t += 1;
-                if(t > 1) t -= 1;
-                if(t < 1/6) return p + (q - p) * 6 * t;
-                if(t < 1/2) return q;
-                if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+        } else {
+            function hue2rgb(p: any, q: any, t: any) {
+                if (t < 0) t += 1;
+                if (t > 1) t -= 1;
+                if (t < 1/6) return p + (q - p) * 6 * t;
+                if (t < 1/2) return q;
+                if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
                 return p;
             }
-    
+
             var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
             var p = 2 * l - q;
-            r = hue2rgb(p, q, h + 1/3);
-            g = hue2rgb(p, q, h);
-            b = hue2rgb(p, q, h - 1/3);
+
+            r = Math.round(hue2rgb(p, q, h + 1/3) * 255);
+            g = Math.round(hue2rgb(p, q, h) * 255);
+            b = Math.round(hue2rgb(p, q, h - 1/3) * 255);
         }
-    
         return {
-            r: Math.round(r * 255), 
-            g: Math.round(g * 255), 
-            b: Math.round(b * 255)
+            r, 
+            g, 
+            b
         };
     }
 
@@ -81,8 +105,8 @@ export class Color {
       
         s = delta == 0 ? 0 : delta / (1 - Math.abs(2 * l - 1));
       
-        s = +(s * 100).toFixed(1);
-        l = +(l * 100).toFixed(1);
+        s = Math.round(s * 100);
+        l = Math.round(l * 100);
       
         return {
             h,
@@ -91,7 +115,7 @@ export class Color {
         }
     }
     
-    hexToRgb(hex: string): RGB | null {
+    hexToRgb(hex: string): RGB {
         var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
         if(result) {
             return {
@@ -100,7 +124,7 @@ export class Color {
                 b: parseInt(result[3], 16)
             }
         } else {
-            return null;
+            return {r: 255, g: 0, b: 0};
         }
     }
 

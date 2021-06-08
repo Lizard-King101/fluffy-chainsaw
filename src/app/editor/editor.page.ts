@@ -1,5 +1,7 @@
 import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from "@angular/core";
 import { EditorService } from "../_services/editor.service";
+import { Color } from "./objects/color.object";
+import { Line } from "./objects/line.object";
 import { Point } from "./objects/point.object";
 
 @Component({
@@ -25,6 +27,12 @@ export class EditorPage implements AfterViewInit{
 
     constructor(public editor: EditorService) {
         this.moveStart = new Point(0,0);
+        let color = new Color();
+        color.rgb = { r: 255, g: 0, b: 47};
+        // color.hsl = {h: 349, s: 100, l: 50};
+        
+        console.log(color.hex, color.rgb, color.hsl);
+        
     }
 
     ngAfterViewInit() {

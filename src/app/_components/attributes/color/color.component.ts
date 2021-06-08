@@ -1,65 +1,69 @@
-import { AfterViewInit, Component, Input } from "@angular/core";
-import { ControlValueAccessor } from "@angular/forms";
-import { Color, HSL } from "src/app/editor/objects/color.object";
+import { AfterViewInit, Component, forwardRef, Input } from "@angular/core";
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { Color, HSL, RGB } from "src/app/editor/objects/color.object";
 
 @Component({
     selector: 'color',
     templateUrl: 'color.component.html',
-    styleUrls: ['color.component.scss']
+    styleUrls: ['color.component.scss'],
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => ColorAttribute),
+            multi: true
+        }
+    ]
 })
-export class ColorAttribute implements AfterViewInit, ControlValueAccessor{
-
-    @Input('return') returnType: 'rgb' | 'hsl' | 'hex' = 'hex';
-    val?: any;
-
+export class ColorAttribute implements AfterViewInit, ControlValueAccessor {
+    @Input('label') label?: string;
     editType: 'rgbs' | 'rgbp' | 'hsl' = 'hsl';
 
-    color: Color
+    color: Color;
+
+    rgb: RGB;
+    hsl: HSL;
 
     constructor() {
         this.color = new Color();
+        this.rgb = this.color.rgb;
+        this.hsl = this.color.hsl;
+        // this.color.hsl = {h: 50, s: .75, l: 1};
+    }
+
+    updateHEX() {
+        this.rgb = this.color.rgb;
+        this.hsl = this.color.hsl;
+    }
+
+    updateHSL() {
+        this.color.hsl = this.hsl;
+        this.rgb = this.color.rgb;
+    }
+
+    updateRGB() {
+        this.color.rgb = this.rgb;
+        this.hsl = this.color.hsl;
     }
 
     ngAfterViewInit() {
 
     }
 
-    onChange(_value: any) {};
+    onChange(_value: Color) {};
     onTouch():void {}
 
-    set value(val: any) {
-        if(val != undefined && this.val !== val) {
-            this.val = val;
-            this.onTouch();
-            this.onChange(this.val);
-        }
-    }
-
-    get value() {
-        if(this.val) {
-            return this.val
+    writeValue(_value: Color) {
+        if(_value) {
+            this.color = _value;
+            this.rgb = this.color.rgb;
+            this.hsl = this.color.hsl;
+            console.log('Write Value', _value);
         } else {
-            switch(this.returnType) {
-                case 'hex':
-                    return '#000000';
-                    break;
-                case 'hsl':
-                    return {h: 0, s: 1, l: .5};
-                    break;
-                case 'rgb':
-                    return {r: 255, g: 0, b: 0};
-                    break;
-            }
+            this.onChange(this.color);
         }
     }
 
-    writeValue(_value: any) {
-        this.value = _value;
-        console.log('Write Value', _value);
-        
-    }
-
-    registerOnChange(fn: (_v: any) => {}) {
+    registerOnChange(fn: (_v: Color) => {}) {
         this.onChange = fn;
     }
 

@@ -29,6 +29,7 @@
         <div class="attribute-panel">
             <ng-container *ngIf="editor.editingElement">
                 <ng-container *ngFor="let attr of editor.editingElement?.attributes">
+                    <color *ngIf="attr.input == 'color'" [(ngModel)]="editor.editingElement.settings[attr.output]" [label]="attr.label"></color>
                     <range *ngIf="attr.input == 'range'" [(ngModel)]="editor.editingElement.settings[attr.output]" [min]="attr.min" [max]="attr.max" [label]="attr.label"></range>
                     <attr-select *ngIf="attr.input == 'select'" [(ngModel)]="editor.editingElement.settings[attr.output]" [options]="attr.options" [label]="attr.label"></attr-select>
                 </ng-container>

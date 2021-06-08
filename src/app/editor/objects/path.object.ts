@@ -9,6 +9,8 @@ export class Path {
 
     settings: {[key:string]: any} = {
         stroke_width: 5,
+        fill: null,
+        stroke: null,
         line_cap: null,
         line_join: null
     };
@@ -21,6 +23,18 @@ export class Path {
             output: 'stroke_width',
             min: 0,
             max: 30
+        },
+        {
+            label: 'Stroke Color',
+            name: 'stroke',
+            input: 'color',
+            output: 'stroke',
+        },
+        {
+            label: 'Fill Color',
+            name: 'fill',
+            input: 'color',
+            output: 'fill',
         },
         {
             label: 'Line Caps',
