@@ -30,6 +30,7 @@
             <ng-container *ngIf="editor.editingElement">
                 <ng-container *ngFor="let attr of editor.editingElement?.attributes">
                     <range *ngIf="attr.input == 'range'" [(ngModel)]="editor.editingElement.settings[attr.output]" [min]="attr.min" [max]="attr.max" [label]="attr.label"></range>
+                    <attr-select *ngIf="attr.input == 'select'" [(ngModel)]="editor.editingElement.settings[attr.output]" [options]="attr.options" [label]="attr.label"></attr-select>
                 </ng-container>
             </ng-container>
         </div>

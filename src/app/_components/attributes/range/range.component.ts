@@ -1,6 +1,5 @@
 import {AfterViewInit, Component, forwardRef, Input, OnInit} from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
-import {AbstractValueAccessor, MakeProvider} from "../abstractValueAcessor";
 
 
 @Component({
@@ -55,10 +54,11 @@ export class RangeAttribute implements AfterViewInit, ControlValueAccessor{
         }
     }
 
-    writeValue(_value: number) {
-        this.value = _value;
-        console.log('Write Value', _value);
-        
+    writeValue(_value?: number) {
+        if(_value) {
+            this.value = _value;
+            console.log('Range ', _value);
+        }
     }
 
     registerOnChange(fn: (_v: number) => {}) {

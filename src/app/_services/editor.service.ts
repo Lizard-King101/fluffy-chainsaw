@@ -202,10 +202,16 @@ export class EditorService {
 export interface ElementAttribute {
     label: string;
     name: string;
-    input: 'range' | 'number' | 'text' | 'color';
+    input: 'range' | 'number' | 'text' | 'color' | 'select';
     output: string;
     min?: number;
     max?: number;
+    options?: AttriputSelectOption[];
+}
+
+export interface AttriputSelectOption {
+    label: string;
+    value: any;
 }
 
 export interface Color {

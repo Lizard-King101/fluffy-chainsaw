@@ -6,6 +6,13 @@
 
 <ng-container *ngFor="let element of editor.selectedSVG?.elements">
     <ng-container *ngIf="editor.elementIsPath(element)">
-        <svg:path [id]="element.id" [attr.d]="element.raw" stroke="black" [attr.stroke-width]="element.settings.stroke" fill="transparent"/>
+        <svg:path 
+        [id]="element.id" 
+        [attr.d]="element.raw" 
+        stroke="black" 
+        [attr.stroke-width]="element.settings.stroke_width"
+        [attr.stroke-linecap]="element.settings.line_cap"
+        [attr.stroke-linejoin]="element.settings.line_join"
+        fill="transparent"/>
     </ng-container>
 </ng-container>

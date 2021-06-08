@@ -1,0 +1,16 @@
+:host {
+    label {
+        font-size: 1rem;
+        padding: 4px 15px;
+        margin: 0;
+    }
+
+    .inputs {
+        display: flex;
+        padding: 5px;
+
+        select {
+            width: 100%;
+        }
+    }
+}

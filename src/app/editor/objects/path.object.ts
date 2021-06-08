@@ -8,7 +8,9 @@ export class Path {
     closed: boolean = false;
 
     settings: {[key:string]: any} = {
-        stroke: 5
+        stroke_width: 5,
+        line_cap: null,
+        line_join: null
     };
 
     attributes: ElementAttribute[] = [
@@ -16,9 +18,57 @@ export class Path {
             label: 'Stroke Width',
             name: 'stroke-width',
             input: 'range',
-            output: 'stroke',
+            output: 'stroke_width',
             min: 0,
             max: 30
+        },
+        {
+            label: 'Line Caps',
+            name: 'stroke-linecap',
+            input: 'select',
+            output: 'line_cap',
+            options: [
+                {
+                    label: 'Butt',
+                    value: 'butt'
+                },
+                {
+                    label: 'Round',
+                    value: 'round',
+                },
+                {
+                    label: 'Square',
+                    value: 'square'
+                }
+            ]
+        },
+        {
+            label: 'Line Joint',
+            name: 'stroke-linejoin',
+            input: 'select',
+            output: 'line_join',
+            options: [
+                {
+                    label: 'Crop',
+                    value: 'crop'
+                },
+                {
+                    label: 'Arcs',
+                    value: 'arcs',
+                },
+                {
+                    label: 'Miter',
+                    value: 'miter'
+                },
+                {
+                    label: 'Bevel',
+                    value: 'bevel'
+                },
+                {
+                    label: 'Round',
+                    value: 'round'
+                }
+            ]
         }
     ];
 
