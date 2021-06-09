@@ -64,4 +64,8 @@ export class Tool {
     contextMenu(event: MouseEvent) {}
 
     reset(): void {}
+
+    keyPressed(key: string): void {}
+
+    keyReleased(key: string): void {}
 }

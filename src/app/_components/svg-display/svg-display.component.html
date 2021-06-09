@@ -1,9 +1,3 @@
-<ng-container *ngFor="let element of editor.selectedSVG?.tempElements">
-    <ng-container *ngIf="editor.elementIsPath(element)">
-        <svg:path [id]="element.id" [attr.d]="element.raw" stroke="#aeaeae" stroke-width="2" fill="transparent"/>
-    </ng-container>
-</ng-container>
-
 <ng-container *ngFor="let element of editor.selectedSVG?.elements">
     <ng-container *ngIf="editor.elementIsPath(element)">
         <svg:path 
@@ -14,7 +8,13 @@
         [attr.stroke-width]="element.settings.stroke_width"
         [attr.stroke-linecap]="element.settings.line_cap"
         [attr.stroke-linejoin]="element.settings.line_join"
-        fill="transparent"/>
+        />
     </ng-container>
     <!-- [attr.stroke]="element.settings.stroke.hex"  -->
+</ng-container>
+
+<ng-container *ngFor="let element of editor.selectedSVG?.tempElements">
+    <ng-container *ngIf="editor.elementIsPath(element)">
+        <svg:path [id]="element.id" [attr.d]="element.raw" stroke="#aeaeae" stroke-width="2" fill="transparent"/>
+    </ng-container>
 </ng-container>

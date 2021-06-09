@@ -22,6 +22,7 @@ export class PenTool extends Tool{
         console.log('Pen Click');
         if(this._editor.selectedSVG) {
             let point = this._editor.toCanvasPoint(event.clientX, event.clientY);
+            if(this._editor.editingElement instanceof Path && this._editor.editingElement.closed) this._editor.editingElement = undefined;
 
             if(this._editor.editingElement == undefined) {
                 let path = new Path(this._editor);
@@ -65,6 +66,17 @@ export class PenTool extends Tool{
         }
     }
 
+    onselect() {
+        if(this._editor.editingElement instanceof Path && !this._editor.editingElement.closed && this._editor.selectedSVG) {
+            let point = this._editor.editingElement.lines[this._editor.editingElement.lines.length - 1].points[0];
+            this._editor.editingElement.lines.pop();
+            let line = new Line(this._editor, {points: [point, point.add(0,0)]})
+            this.tmpPath = new Path(this._editor);
+            this.tmpPath.lines.push(line);
+            this._editor.selectedSVG.tempElements.push(this.tmpPath);
+        }
+        return true;
+    }
     // down(event: MouseEvent) {
     //     setTimeout(() => {
     //         if(!this.clicked) {
@@ -80,6 +92,16 @@ export class PenTool extends Tool{
     //     this.canDrag = false;
     //     this.clicked = false;
     // }
+
+    keyPressed(key: string) {
+        switch(key) {
+            case 'Escape':
+                this._editor.editingElement = undefined;
+                this.tmpPath?.destroy();
+                this.tmpPath = undefined;
+                break;
+        }
+    }
 
     drag(event: MouseEvent) {
         if(this.canDrag) {

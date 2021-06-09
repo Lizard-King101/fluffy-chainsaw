@@ -24,7 +24,7 @@ export class EditorService {
         snapDistance: 5
     }
 
-    keysPressed: KeysPressed = {};
+    keysDown: KeysPressed = {};
 
     constructor() {
         Tools.forEach((tool) => {
@@ -43,6 +43,7 @@ export class EditorService {
     }
 
     newSVG(width: number, height: number) {
+        this.editingElement = undefined;
         if(this.viewPort != undefined) {
             let id = this.ID;
             let svg = new SVG(this, {
@@ -59,6 +60,7 @@ export class EditorService {
     }
 
     selectSVG(id: string) {
+        this.editingElement = undefined;
         for(let i = 0; i < this.svgs.length; i++) {
             let s = this.svgs[i];
             if(s.id == id) {
@@ -194,6 +196,16 @@ export class EditorService {
         }
     }
 
+    keyPressed(key: string) {
+        this.keysDown[key] = true;
+        this.selectedTool?.keyPressed(key);
+    }
+
+    keyReleased(key: string) {
+        delete this.keysDown[key];
+        this.selectedTool?.keyReleased(key);
+    }
+
     get ID() {
         return Math.random().toString(36).substr(2, 9);
     }
@@ -221,5 +233,5 @@ export interface Color {
 }
 
 interface KeysPressed {
-    [key:string]: string;
+    [key:string]: boolean;
 }
