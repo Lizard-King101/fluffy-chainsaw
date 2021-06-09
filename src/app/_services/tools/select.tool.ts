@@ -33,7 +33,7 @@ export class SelectTool extends Tool {
     drag(event: MouseEvent) {
         if(this.moveStart && this.movingElement && this._editor.editingElement && this._editor.selectedSVG) {
             let pos = this._editor.toCanvasPoint(event.clientX, event.clientY);
-            let delta = pos.subtract(this.moveStart).divide(2)
+            let delta = pos.subtract(this.moveStart)
             this.moveStart = pos;
             this._editor.editingElement.moveElement(delta);
             this.movedElement = true;

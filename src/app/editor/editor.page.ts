@@ -19,10 +19,10 @@ export class EditorPage implements AfterViewInit{
 
     
     @HostListener('document:keydown', ['$event']) handleKeyDown(event: KeyboardEvent) {
-        console.log(event.key);
+        this.editor.keyPressed(event.key);
     }
     @HostListener('document:keyup', ['$event']) handleKeyUp(event: KeyboardEvent) {
-        console.log();
+        this.editor.keyReleased(event.key);
     }
 
     constructor(public editor: EditorService) {

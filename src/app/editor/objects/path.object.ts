@@ -120,9 +120,13 @@ export class Path {
     }
 
     moveElement(delta: Point) {
+        let moved: Point[] = [];
         this.lines.forEach((l) => {
             l.points.forEach((p) => {
-                p.addTo(delta);
+                if(moved.indexOf(p) < 0) {
+                    p.addTo(delta);
+                    moved.push(p);
+                }
             })
         })
     }
