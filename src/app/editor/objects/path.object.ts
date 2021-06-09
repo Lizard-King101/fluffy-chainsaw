@@ -62,14 +62,14 @@ export class Path {
             input: 'select',
             output: 'line_join',
             options: [
-                {
-                    label: 'Crop',
-                    value: 'crop'
-                },
-                {
-                    label: 'Arcs',
-                    value: 'arcs',
-                },
+                // {
+                //     label: 'Crop',
+                //     value: 'crop'
+                // },
+                // {
+                //     label: 'Arcs',
+                //     value: 'arcs',
+                // },
                 {
                     label: 'Miter',
                     value: 'miter'
