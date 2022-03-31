@@ -12,6 +12,11 @@ export class Square extends Tool {
 
     }
 
+    down() {
+        console.log('Square Down');
+        
+    }
+
     onselect() {
         this.parentTool.showChildren = false;
         this.parentTool.slectedChild = this;
